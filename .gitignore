@@ -24,3 +24,7 @@ examples/garlic_out
 !media/*.gif
 
 torchserve/logs/
+
+#Environment
+venv/
+.kiro/
