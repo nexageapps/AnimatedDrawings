@@ -1,6 +1,8 @@
-# Themed Animation Platform
+# DrawWorld
 
-A multi-user platform that transforms static drawings into animated characters within shared, themed virtual worlds. Built on top of [Facebook Research's AnimatedDrawings](https://github.com/facebookresearch/AnimatedDrawings) library.
+Transform drawings into animated characters in shared themed worlds.
+
+A multi-user platform built on top of [Facebook Research's AnimatedDrawings](https://github.com/facebookresearch/AnimatedDrawings) library.
 
 ## Overview
 
