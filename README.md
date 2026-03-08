@@ -1,14 +1,45 @@
+<div align="center">
+
 # DrawWorld
 
-Transform drawings into animated characters in shared themed worlds.
+**Transform drawings into animated characters in shared themed worlds**
 
-A multi-user platform built on top of [Facebook Research's AnimatedDrawings](https://github.com/facebookresearch/AnimatedDrawings) library.
+[![Python](https://img.shields.io/badge/Python-3.8%2B-blue.svg)](https://www.python.org/downloads/)
+[![Flask](https://img.shields.io/badge/Flask-3.0%2B-green.svg)](https://flask.palletsprojects.com/)
+[![PostgreSQL](https://img.shields.io/badge/PostgreSQL-12%2B-blue.svg)](https://www.postgresql.org/)
+[![License](https://img.shields.io/badge/License-MIT-yellow.svg)](LICENSE)
+[![Sponsored by NexageApps](https://img.shields.io/badge/Sponsored%20by-NexageApps-orange.svg)](https://nexageapps.com)
+
+A multi-user platform built on [Facebook Research's AnimatedDrawings](https://github.com/facebookresearch/AnimatedDrawings)
+
+[Features](#key-features) • [Quick Start](#quick-start) • [Documentation](#documentation) • [Contributing](#contributing)
+
+</div>
+
+---
 
 ## Overview
 
-The Themed Animation Platform accepts drawing images, automatically animates them using AI-powered character detection, and places them into collaborative themed environments where multiple users' creations coexist and interact spatially.
+DrawWorld accepts drawing images, automatically animates them using AI-powered character detection, and places them into collaborative themed environments where multiple users' creations coexist and interact spatially.
 
-### Key Features
+---
+
+## Key Features
+- [Project Structure](#project-structure)
+- [Configuration](#configuration)
+- [Testing](#testing)
+- [API Documentation](#api-documentation)
+- [Deployment](#deployment)
+- [Development Status](#development-status)
+- [Technology Stack](#technology-stack)
+- [Technical Details](#technical-details)
+- [Contributing](#contributing)
+- [License](#license)
+- [Acknowledgments](#acknowledgments)
+- [Resources](#resources)
+- [Citation](#citation)
+
+---
 
 - **Email-based submission workflow** - Send drawings via email with theme specifications
 - **AI-powered animation** - Automatic character detection and animation using Facebook's Animated Drawings
@@ -16,6 +47,15 @@ The Themed Animation Platform accepts drawing images, automatically animates the
 - **Intelligent spatial positioning** - Smart placement with collision avoidance and theme-aware rules
 - **Multi-user collaboration** - Multiple users' drawings coexist in the same themed world
 - **Dual operation modes** - Testing mode for development, production mode for email-based workflow
+
+## Technology Stack
+
+- **Backend:** Python 3.8+, Flask, SQLAlchemy
+- **Database:** PostgreSQL 12+
+- **Cache & Queue:** Redis, Celery
+- **Animation:** Facebook Animated Drawings (PyTorch)
+- **Frontend:** HTML5, CSS3, JavaScript (Vanilla)
+- **Rendering:** FFmpeg, Three.js (planned)
 
 ## Acknowledgments
 
@@ -27,6 +67,10 @@ This project is built on top of the excellent work by Facebook Research:
 - **License:** MIT License
 
 We are grateful to the Facebook Research team for making this technology available to the community.
+
+## Sponsorship
+
+This project is sponsored by [NexageApps](https://nexageapps.com) - Building innovative digital solutions.
 
 ## Quick Start
 
@@ -327,14 +371,27 @@ This is an active development project following the implementation plan in `.kir
 
 ## Contributing
 
-Contributions are welcome! Please:
+We welcome contributions! Here's how to get started:
 
-1. Review the project specifications in `.kiro/specs/themed-animation-platform/`
-2. Follow the implementation plan in `tasks.md`
-3. Acknowledge the original Facebook Research project
-4. Write tests for new features
-5. Update documentation as needed
-6. Test in both Testing and Production modes
+1. **Fork the repository** and create your branch from `main`
+2. **Review specifications** in `.kiro/specs/themed-animation-platform/`
+3. **Follow the implementation plan** in `tasks.md`
+4. **Write tests** for new features (pytest + Hypothesis)
+5. **Update documentation** as needed
+6. **Test thoroughly** in both Testing and Production modes
+7. **Submit a pull request** with a clear description
+
+### Development Guidelines
+
+- Follow PEP 8 style guide for Python code
+- Write meaningful commit messages
+- Add docstrings to all functions and classes
+- Ensure all tests pass before submitting PR
+- Acknowledge the original Facebook Research project in relevant code
+
+### Code of Conduct
+
+This project follows a code of conduct to ensure a welcoming environment for all contributors. Please be respectful and constructive in all interactions.
 
 ## API Documentation
 
@@ -378,21 +435,35 @@ See `DEPLOYMENT_READY.md` for detailed deployment instructions.
 
 ## License
 
-This project maintains the MIT License from the original AnimatedDrawings project.
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
 
-**Original License:** [LICENSE](LICENSE) - Facebook Research AnimatedDrawings
+This maintains compatibility with the original AnimatedDrawings project license.
 
-## Links
+### Third-Party Licenses
 
-- **Original Project:** https://github.com/facebookresearch/AnimatedDrawings
+- **AnimatedDrawings:** MIT License - Facebook Research
+- **Flask:** BSD-3-Clause License
+- **SQLAlchemy:** MIT License
+- **Celery:** BSD License
+
+## Resources
+
+### Project Links
+- **Documentation:** [.kiro/specs/themed-animation-platform/](.kiro/specs/themed-animation-platform/)
+- **Issue Tracker:** [GitHub Issues](../../issues)
+- **Sponsor:** [NexageApps](https://nexageapps.com)
+
+### Original AnimatedDrawings
+- **Repository:** https://github.com/facebookresearch/AnimatedDrawings
 - **Research Paper:** https://dl.acm.org/doi/10.1145/3592788
 - **Demo Website:** https://sketch.metademolab.com/
 
 ## Support
 
 For issues related to:
-- **Themed Animation Platform:** Open an issue in this repository
+- **DrawWorld Platform:** Open an issue in this repository
 - **Core Animation Library:** Refer to the [original project](https://github.com/facebookresearch/AnimatedDrawings)
+- **Commercial Support:** Contact [NexageApps](https://nexageapps.com)
 
 ## Citation
 
@@ -414,4 +485,12 @@ numpages = {15}
 
 ---
 
+<div align="center">
+
+**DrawWorld** - Sponsored by [NexageApps](https://nexageapps.com)
+
 Built on top of Facebook Research's AnimatedDrawings
+
+[⬆ Back to Top](#drawworld)
+
+</div>
