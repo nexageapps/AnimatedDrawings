@@ -12,6 +12,93 @@ Services implement the core business logic of the Themed Animation Platform. The
 
 ## Available Services
 
+### ImageProcessingService
+
+Handles image validation, normalization, and storage coordination for the platform.
+
+**Requirements**: 2.1, 2.2, 2.5
+
+**Key Features**:
+- Image validation (format, size, corruption)
+- Image normalization (resize, format conversion)
+- Storage coordination
+- Unique identifier generation
+- Complete processing pipeline
+
+**Usage Example**:
+
+```python
+from services import ImageProcessingService, ImageMetadata
+
+# Initialize service
+image_service = ImageProcessingService()
+
+# Validate an image
+result = image_service.validate_image('path/to/image.png')
+if result.is_valid:
+    print(f"Valid {result.format} image: {result.dimensions}")
+else:
+    print(f"Invalid: {result.error_message}")
+
+# Process image (validate + store + normalize)
+metadata = ImageMetadata(
+    sender_email="user@example.com",
+    theme_id="jungle",
+    original_filename="drawing.png"
+)
+
+original_url, normalized_url = image_service.process_image(
+    'uploads/temp/drawing.png',
+    metadata
+)
+print(f"Original: {original_url}")
+print(f"Normalized: {normalized_url}")
+```
+
+**Supported Formats**: PNG, JPG, JPEG, GIF  
+**Max Size**: 10MB  
+**Max Dimensions**: 2048x2048 (maintains aspect ratio)
+
+### StorageService / LocalStorageService
+
+Provides abstraction layer for storing and retrieving files with support for different backends.
+
+**Requirements**: 2.2
+
+**Key Features**:
+- Abstract interface for storage backends
+- Local filesystem implementation
+- Organized directory structure
+- UUID-based file naming
+- File existence checking
+
+**Usage Example**:
+
+```python
+from services import LocalStorageService
+
+# Initialize storage
+storage = LocalStorageService(base_path="uploads")
+
+# Store a file
+identifier = storage.store("path/to/file.png", "original/my_image.png")
+
+# Check if exists
+if storage.exists(identifier):
+    # Retrieve file path
+    file_path = storage.retrieve(identifier)
+    print(f"File at: {file_path}")
+
+# Delete file
+storage.delete(identifier)
+```
+
+**Directory Structure**:
+- `uploads/original/` - Original images
+- `uploads/normalized/` - Normalized images
+- `uploads/animations/` - Animation files
+- `uploads/masks/` - Segmentation masks
+
 ### ThemeManagerService
 
 Manages theme operations including CRUD, validation, and theme-to-motion-sequence mapping.
@@ -143,7 +230,6 @@ python3 services/test_theme_manager.py
 
 The following services will be added as the platform develops:
 
-- **ImageProcessingService**: Image validation, normalization, and storage
 - **AnimationEngineService**: Facebook Animated Drawings integration
 - **WorldCompositorService**: Spatial positioning and world management
 - **RenderingService**: Scene composition and video generation

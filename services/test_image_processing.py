@@ -12,13 +12,12 @@ from pathlib import Path
 from PIL import Image
 import pytest
 
-from services import (
-    ImageProcessingService,
-    StorageService,
-    LocalStorageService,
-    ValidationResult,
-    ImageMetadata
-)
+import sys
+import os
+sys.path.insert(0, os.path.dirname(os.path.dirname(os.path.abspath(__file__))))
+
+from services.image_processing_service import ImageProcessingService, ValidationResult, ImageMetadata
+from services.storage_service import StorageService, LocalStorageService
 
 
 class TestLocalStorageService:

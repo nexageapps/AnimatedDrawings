@@ -1,93 +1,105 @@
 # 🏗️ Architecture Overview
 
-## System Architecture
+## System Architecture Diagram
 
-```
-┌─────────────────────────────────────────────────────────────┐
-│                         USER BROWSER                         │
-│                     http://localhost:5001                    │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-                           │ HTTP Requests
-                           │
-┌──────────────────────────▼──────────────────────────────────┐
-│                      FLASK WEB SERVER                        │
-│                         (app.py)                             │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │              API ENDPOINTS                          │    │
-│  │  • GET  /                  → index.html            │    │
-│  │  • GET  /api/mode          → Current mode          │    │
-│  │  • GET  /api/test-images   → List test images     │    │
-│  │  • POST /api/upload        → Upload file           │    │
-│  │  • POST /api/animate       → Start animation       │    │
-│  └────────────────────────────────────────────────────┘    │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │           CONFIGURATION                             │    │
-│  │  • APP_MODE: testing | production                  │    │
-│  │  • PORT: 5001                                       │    │
-│  │  • MAX_FILE_SIZE: 16MB                             │    │
-│  │  • ALLOWED_TYPES: png, jpg, jpeg                   │    │
-│  └────────────────────────────────────────────────────┘    │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-                           │ File System Access
-                           │
-┌──────────────────────────▼──────────────────────────────────┐
-│                    FILE SYSTEM LAYER                         │
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐  ┌─────────────────┐  │
-│  │ test_images/ │  │   uploads/   │  │  templates/     │  │
-│  │              │  │              │  │                 │  │
-│  │ • garlic.png │  │ • user1.png  │  │ • index.html    │  │
-│  │ • ...        │  │ • user2.jpg  │  │                 │  │
-│  └──────────────┘  └──────────────┘  └─────────────────┘  │
-│                                                              │
-│  ┌──────────────┐  ┌──────────────┐                        │
-│  │   static/    │  │  examples/   │                        │
-│  │              │  │              │                        │
-│  │ • css/       │  │ • bvh/       │                        │
-│  │ • js/        │  │ • config/    │                        │
-│  └──────────────┘  └──────────────┘                        │
-└──────────────────────────┬──────────────────────────────────┘
-                           │
-                           │ Animation Processing
-                           │
-┌──────────────────────────▼──────────────────────────────────┐
-│              ANIMATED DRAWINGS CORE ENGINE                   │
-│           (Facebook Research's AnimatedDrawings)             │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │  1. Character Detection                             │    │
-│  │     • Detect human figure in drawing                │    │
-│  │     • Segment character from background             │    │
-│  └────────────────────────────────────────────────────┘    │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │  2. Pose Estimation                                 │    │
-│  │     • Identify joint locations                      │    │
-│  │     • Create skeleton structure                     │    │
-│  └────────────────────────────────────────────────────┘    │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │  3. Rigging                                         │    │
-│  │     • Build character rig                           │    │
-│  │     • Apply ARAP deformation                        │    │
-│  └────────────────────────────────────────────────────┘    │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │  4. Motion Retargeting                              │    │
-│  │     • Load BVH motion data                          │    │
-│  │     • Retarget to character skeleton                │    │
-│  └────────────────────────────────────────────────────┘    │
-│                                                              │
-│  ┌────────────────────────────────────────────────────┐    │
-│  │  5. Rendering                                       │    │
-│  │     • Generate animation frames                     │    │
-│  │     • Export as GIF or MP4                          │    │
-│  └────────────────────────────────────────────────────┘    │
-└──────────────────────────────────────────────────────────────┘
+```mermaid
+graph TB
+    %% User Layer
+    User[👤 User Browser<br/>http://localhost:5001]
+    
+    %% API Layer
+    Flask[🌐 Flask Web Server<br/>app.py]
+    
+    %% Service Layer
+    subgraph Services["🔧 Services Layer"]
+        ThemeService[ThemeManagerService<br/>Theme CRUD & Validation]
+        ImageService[ImageProcessingService<br/>Image Validation & Storage]
+        StorageService[StorageService<br/>File Management]
+    end
+    
+    %% Database Layer
+    subgraph Database["💾 Database Layer"]
+        ORM[SQLAlchemy ORM<br/>Models & Sessions]
+        Repo[Repository Pattern<br/>Data Access]
+        PG[(PostgreSQL<br/>themed_animation)]
+    end
+    
+    %% Configuration
+    subgraph Config["⚙️ Configuration"]
+        ThemeConfig[Theme Configs<br/>config/themes/*.json]
+        BVHFiles[BVH Motion Files<br/>examples/bvh/]
+    end
+    
+    %% Animation Engine
+    subgraph AnimEngine["🎬 Animation Engine"]
+        Detection[Character Detection<br/>Segmentation]
+        Pose[Pose Estimation<br/>Joint Detection]
+        Rigging[Rigging<br/>ARAP Deformation]
+        Motion[Motion Retargeting<br/>BVH Application]
+        Render[Rendering<br/>GIF/MP4 Export]
+    end
+    
+    %% File Storage
+    subgraph FileSystem["📁 File System"]
+        Uploads[uploads/<br/>User Images]
+        TestImages[test_images/<br/>Test Data]
+        Static[static/<br/>CSS, JS, Backgrounds]
+        Output[output/<br/>Generated Videos]
+    end
+    
+    %% Connections - User to API
+    User -->|HTTP Requests| Flask
+    Flask -->|HTML Response| User
+    
+    %% Connections - API to Services
+    Flask -->|Get/Validate Theme| ThemeService
+    Flask -->|Process Image| ImageService
+    Flask -->|Store/Retrieve Files| StorageService
+    
+    %% Connections - Services to Database
+    ThemeService -->|Query Themes| Repo
+    ImageService -->|Store Metadata| Repo
+    Repo -->|ORM Operations| ORM
+    ORM -->|SQL Queries| PG
+    
+    %% Connections - Services to Config
+    ThemeService -.->|Load Configs| ThemeConfig
+    ThemeService -.->|Get Motions| BVHFiles
+    
+    %% Connections - Services to File System
+    ImageService -->|Save/Load| Uploads
+    StorageService -->|Manage Files| Uploads
+    StorageService -->|Access Test Data| TestImages
+    Flask -.->|Serve Static| Static
+    
+    %% Connections - Animation Pipeline
+    Flask -->|Trigger Animation| Detection
+    Detection -->|Character Data| Pose
+    Pose -->|Skeleton| Rigging
+    Rigging -->|Rigged Character| Motion
+    Motion -->|Apply BVH| Render
+    Render -->|Save Video| Output
+    Output -->|Return Path| Flask
+    
+    %% Motion files to Animation
+    BVHFiles -.->|Motion Data| Motion
+    
+    %% Styling
+    classDef userStyle fill:#e1f5ff,stroke:#01579b,stroke-width:2px
+    classDef apiStyle fill:#fff3e0,stroke:#e65100,stroke-width:2px
+    classDef serviceStyle fill:#f3e5f5,stroke:#4a148c,stroke-width:2px
+    classDef dbStyle fill:#e8f5e9,stroke:#1b5e20,stroke-width:2px
+    classDef configStyle fill:#fff9c4,stroke:#f57f17,stroke-width:2px
+    classDef engineStyle fill:#fce4ec,stroke:#880e4f,stroke-width:2px
+    classDef fsStyle fill:#e0f2f1,stroke:#004d40,stroke-width:2px
+    
+    class User userStyle
+    class Flask apiStyle
+    class ThemeService,ImageService,StorageService serviceStyle
+    class ORM,Repo,PG dbStyle
+    class ThemeConfig,BVHFiles configStyle
+    class Detection,Pose,Rigging,Motion,Render engineStyle
+    class Uploads,TestImages,Static,Output fsStyle
 ```
 
 ## Component Breakdown
