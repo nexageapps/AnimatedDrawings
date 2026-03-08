@@ -1,17 +1,26 @@
 # Git Workflow Guide
 
+## Repository Status
+
+**Original repo is ARCHIVED** (read-only as of Sep 4, 2025) - No more updates expected!
+
+This means:
+- Your fork is now the active development version
+- No need to sync with upstream (it won't change)
+- You have full control over the direction
+
 ## Branch Strategy
 
 ### Main Branches
-- **`main`**: Synced with upstream (original Facebook Research repo). Keep this clean!
+- **`main`**: Your stable production branch (based on archived original)
 - **`develop`**: Your integration branch for ongoing development
 - **`feature/*`**: Individual feature branches
 
 ## Current Setup
 
 ```bash
-origin    → https://github.com/nexageapps/AnimatedDrawings.git (your fork)
-upstream  → https://github.com/facebookresearch/AnimatedDrawings.git (original)
+origin    → https://github.com/nexageapps/AnimatedDrawings.git (your fork - ACTIVE)
+upstream  → https://github.com/facebookresearch/AnimatedDrawings.git (archived - READ-ONLY)
 ```
 
 ## Daily Workflow
@@ -52,19 +61,23 @@ git branch -d feature/your-feature-name
 ```
 
 ### Syncing with Upstream (Original Repo)
-```bash
-# Fetch updates from original repo
-git fetch upstream
+**NOT NEEDED** - Original repo is archived and won't receive updates.
 
-# Update main branch
+If you ever want to check the archived state:
+```bash
+git fetch upstream
+```
+
+### Promoting to Main (Production Release)
+```bash
+# When develop is stable and ready for release
 git checkout main
-git merge upstream/main
+git merge develop
 git push origin main
 
-# Update develop with latest from main
-git checkout develop
-git merge main
-git push origin develop
+# Tag the release
+git tag -a v1.0.0 -m "Release version 1.0.0"
+git push origin v1.0.0
 ```
 
 ## Current Feature Branch
@@ -81,8 +94,18 @@ git push origin feature/themed-animation-platform
 
 ## Tips
 
-- Keep `main` clean - only sync with upstream
+- Keep `main` as your stable release branch
 - Do all development in `feature/*` branches
 - Merge features into `develop` for testing
+- Promote `develop` to `main` when ready for release
 - Use descriptive branch names: `feature/api-integration`, `fix/animation-bug`
 - Commit often with clear messages
+- Consider semantic versioning for releases (v1.0.0, v1.1.0, etc.)
+
+## Your Advantages
+
+Since the original is archived:
+- You can make breaking changes without worrying about upstream conflicts
+- You own the roadmap and feature direction
+- No need to maintain compatibility with upstream updates
+- Your fork becomes the canonical version for your use case
