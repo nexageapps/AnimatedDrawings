@@ -1,0 +1,71 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Animated Drawings - Web UI</title>
+    <link rel="stylesheet" href="/static/css/style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>🎨 Animated Drawings</h1>
+            <p class="subtitle">Bring your drawings to life with AI animation</p>
+            <div id="mode-indicator" class="mode-badge">Loading...</div>
+        </header>
+
+        <main>
+            <div class="mode-toggle">
+                <button id="testing-mode-btn" class="mode-btn active">Testing Mode</button>
+                <button id="production-mode-btn" class="mode-btn">Production Mode</button>
+            </div>
+
+            <div id="testing-section" class="section active">
+                <h2>Test with Sample Images</h2>
+                <div id="test-images-grid" class="images-grid">
+                    <div class="loading">Loading test images...</div>
+                </div>
+            </div>
+
+            <div id="production-section" class="section hidden">
+                <h2>Upload Your Drawing</h2>
+                <div class="upload-area">
+                    <input type="file" id="file-input" accept="image/png,image/jpeg,image/jpg" hidden>
+                    <button id="upload-btn" class="btn-primary">Choose Image</button>
+                    <p class="upload-hint">PNG, JPG up to 16MB</p>
+                </div>
+                <div id="preview-area" class="hidden">
+                    <img id="preview-image" alt="Preview">
+                </div>
+            </div>
+
+            <div id="animation-controls" class="section hidden">
+                <h2>Animation Settings</h2>
+                <div class="controls">
+                    <label for="motion-select">Choose Motion:</label>
+                    <select id="motion-select">
+                        <option value="dab">Dab</option>
+                        <option value="jumping">Jumping</option>
+                        <option value="wave_hello">Wave Hello</option>
+                        <option value="zombie">Zombie</option>
+                        <option value="jumping_jacks">Jumping Jacks</option>
+                    </select>
+                    <button id="animate-btn" class="btn-primary">Animate!</button>
+                </div>
+            </div>
+
+            <div id="result-area" class="section hidden">
+                <h2>Result</h2>
+                <div id="result-content"></div>
+            </div>
+        </main>
+
+        <footer>
+            <p>Built on top of <a href="https://github.com/facebookresearch/AnimatedDrawings" target="_blank">Facebook Research's AnimatedDrawings</a></p>
+            <p>Original paper: <a href="https://dl.acm.org/doi/10.1145/3592788" target="_blank">A Method for Animating Children's Drawings of the Human Figure</a></p>
+        </footer>
+    </div>
+
+    <script src="/static/js/app.js"></script>
+</body>
+</html>

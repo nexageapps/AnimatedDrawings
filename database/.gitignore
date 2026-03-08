@@ -1,0 +1,28 @@
+# Database configuration files
+config.py
+*.conf
+
+# Database backups
+*.sql.backup
+*.dump
+backup/
+
+# Python cache
+__pycache__/
+*.pyc
+*.pyo
+*.pyd
+.Python
+
+# Environment files
+.env
+.env.local
+
+# IDE files
+.vscode/
+.idea/
+*.swp
+*.swo
+
+# Logs
+*.log

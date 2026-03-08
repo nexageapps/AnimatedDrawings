@@ -1,0 +1,13 @@
+# Database dependencies for Themed Animation Platform
+
+# PostgreSQL adapter
+psycopg2-binary>=2.9.0
+
+# Optional: Connection pooling
+# psycopg2-pool>=1.1
+
+# Optional: Database migrations (alternative to custom script)
+# alembic>=1.12.0
+
+# Optional: ORM (if needed in future)
+# sqlalchemy>=2.0.0

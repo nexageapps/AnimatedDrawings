@@ -1,30 +1,57 @@
-# ignore auto-generated files
-**/.DS_Store
-**/__pycache__
-**/src.egg-info
-animated_drawings.egg-info
-
-# for the fixer app at examples/fixer_app
-.parcel-cache/
-node_modules
-
-# ignore the .mar files
-**/*.mar
-
-# ignore any vscode specific setting files
-.vscode
-
-# ignore any files created by following examples
-**/log.txt
-examples/garlic_out
-**/*.mp4
-**/*.gif
-
-# DO include .gifs used by the Readme
-!media/*.gif
-
-torchserve/logs/
-
-#Environment
+# Python
+__pycache__/
+*.py[cod]
+*$py.class
+*.so
+.Python
 venv/
-.kiro/
+env/
+ENV/
+build/
+develop-eggs/
+dist/
+downloads/
+eggs/
+.eggs/
+lib/
+lib64/
+parts/
+sdist/
+var/
+wheels/
+*.egg-info/
+.installed.cfg
+*.egg
+
+# Virtual environments
+venv/
+ENV/
+env/
+
+# IDE
+.vscode/
+.idea/
+*.swp
+*.swo
+*~
+
+# OS
+.DS_Store
+Thumbs.db
+
+# Project specific
+uploads/*
+!uploads/.gitkeep
+test_images/*
+!test_images/.gitkeep
+!test_images/garlic.png
+*.gif
+*.mp4
+video.*
+
+# Logs
+*.log
+
+# Environment variables
+.env
+archive/

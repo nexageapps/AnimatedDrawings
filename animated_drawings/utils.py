@@ -8,7 +8,10 @@ import numpy.typing as npt
 import cv2
 from pathlib import Path
 import logging
-from pkg_resources import resource_filename
+try:
+    from importlib.resources import files
+except ImportError:
+    from importlib_resources import files
 
 TOLERANCE = 10**-5
 
@@ -23,10 +26,20 @@ def resolve_ad_filepath(file_name: str, file_type: str) -> Path:
         return Path(file_name)
     elif Path.joinpath(Path.cwd(), file_name).exists():
         return Path.joinpath(Path.cwd(), file_name)
-    elif Path(resource_filename(__name__, file_name)).exists():
-        return Path(resource_filename(__name__, file_name))
-    elif Path(resource_filename(__name__, str(Path('..', file_name)))):
-        return Path(resource_filename(__name__, str(Path('..', file_name))))
+    else:
+        try:
+            pkg_path = files('animated_drawings').joinpath(file_name)
+            if Path(str(pkg_path)).exists():
+                return Path(str(pkg_path))
+        except Exception:
+            pass
+        
+        try:
+            pkg_path = files('animated_drawings').joinpath('..', file_name)
+            if Path(str(pkg_path)).exists():
+                return Path(str(pkg_path))
+        except Exception:
+            pass
 
     msg = f'Could not find the {file_type} specified: {file_name}'
     logging.critical(msg)
