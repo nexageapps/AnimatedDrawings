@@ -227,3 +227,38 @@ This schema satisfies the following requirements:
 - **Requirement 2.3**: Email address association with stored images
 - **Requirement 9.1**: Drawing entity metadata storage
 - **Requirement 9.2**: Themed world and entity relationship persistence
+
+## ORM Layer (Task 1.3 ✅)
+
+The database layer includes a complete SQLAlchemy ORM implementation with connection pooling and repository pattern.
+
+### Features
+
+- **SQLAlchemy ORM Models** - Complete mappings for all domain entities
+- **Connection Pooling** - Configurable pool with pre-ping and recycling
+- **Repository Pattern** - Clean data access abstraction
+- **Bidirectional Relationships** - Easy navigation between entities
+- **Performance Indexes** - Optimized for common queries
+
+### Quick Start
+
+```python
+from database.orm import init_db, get_session
+from database.repository import themed_world_repository, drawing_entity_repository
+
+# Initialize database
+init_db('postgresql://localhost/themed_animation', pool_size=10)
+
+# Use repositories
+worlds = themed_world_repository.get_by_theme(theme_id)
+entities = drawing_entity_repository.get_by_world(world_id)
+```
+
+### Documentation
+
+- **`ORM_INTEGRATION.md`** - Complete ORM integration guide
+- **`TASK_1_3_SUMMARY.md`** - Task 1.3 implementation summary
+- **`test_orm_structure.py`** - ORM structure validation tests
+- **`test_orm_integration.py`** - Integration tests (requires database)
+
+See `ORM_INTEGRATION.md` for detailed usage examples and API documentation.

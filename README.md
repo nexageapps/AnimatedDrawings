@@ -113,114 +113,286 @@ The platform consists of six core services:
 - **Ocean** - Underwater theme with depth-based layers and swimming motions
 - **General** - Default theme with balanced grid distribution
 
-## 📁 Project Structure
+## Project Structure
 
 ```
 AnimatedDrawings/
-├── app.py                      # Flask web application
-├── templates/
-│   └── index.html             # Main UI template
-├── static/
-│   ├── css/
-│   │   └── style.css          # Styling
-│   └── js/
-│       └── app.js             # Frontend logic
-├── test_images/               # Sample images for testing
-├── uploads/                   # User uploaded images
-├── animated_drawings/         # Core animation library (Facebook Research)
-├── examples/                  # Example configurations and BVH files
-├── README.md                  # This file
-└── README_ORIGINAL.md         # Original Facebook Research README
+├── app.py                          # Flask web application
+├── database/                       # Database layer
+│   ├── connection.py              # Database connection management
+│   ├── orm.py                     # SQLAlchemy ORM models
+│   ├── repository.py              # Data access layer
+│   ├── migrate.py                 # Migration runner
+│   └── migrations/                # SQL migration files
+├── models/                         # Domain models
+│   ├── drawing.py                 # Drawing entity model
+│   ├── theme.py                   # Theme model
+│   ├── drawing_entity.py          # Placed drawing in world
+│   └── processing_job.py          # Background job model
+├── services/                       # Business logic services (to be implemented)
+│   ├── email_receiver.py          # Email monitoring and parsing
+│   ├── image_processor.py         # Image validation and storage
+│   ├── animation_engine.py        # Animation generation
+│   ├── world_compositor.py        # Spatial positioning
+│   ├── rendering.py               # Scene rendering
+│   └── notification.py            # Email notifications
+├── templates/                      # HTML templates
+│   └── index.html                 # Main UI
+├── static/                         # Static assets
+│   ├── css/style.css              # Styling
+│   └── js/app.js                  # Frontend logic
+├── animated_drawings/              # Core animation library (Facebook Research)
+├── examples/                       # Example configurations and BVH files
+├── test_images/                    # Sample images for testing mode
+├── uploads/                        # User uploaded images
+├── .kiro/specs/                    # Project specifications
+│   └── themed-animation-platform/
+│       ├── requirements.md        # Detailed requirements
+│       ├── design.md              # Architecture and design
+│       └── tasks.md               # Implementation plan
+└── README.md                       # This file
 ```
 
-## 🧪 Testing
+## Testing
+
+### Testing Mode
+
+Testing mode allows rapid development without email infrastructure:
+
+1. Start the application in testing mode:
+```bash
+./run_testing.sh
+```
+
+2. Access the web UI at `http://localhost:5001`
+
+3. Upload drawings directly or select from test images
+
+4. Choose a theme and generate animation
+
+5. View the animated drawing in the themed world
 
 ### Add Test Images
 
-Place your test images in the `test_images/` folder:
+Place test images in the `test_images/` folder:
 
 ```bash
 cp your_drawing.png test_images/
 ```
 
-The web UI will automatically detect and display them in Testing Mode.
-
-### Run Example Animation
+### Run Tests
 
 ```bash
-source venv/bin/activate
-python test_animation.py
+# Run all tests
+pytest
+
+# Run specific test suite
+pytest tests/test_models.py
+pytest database/test_schema.py
+
+# Run with coverage
+pytest --cov=. --cov-report=html
 ```
 
-## 🔧 Configuration
+## Configuration
 
 ### Environment Variables
 
-- `APP_MODE`: Set to `testing` or `production` (default: `testing`)
-- `PORT`: Server port (default: `5000`)
-
-### Example:
+Create a `.env` file with the following configuration:
 
 ```bash
-# Run in production mode on port 8080
-APP_MODE=production PORT=8080 python app.py
+# Application Mode
+APP_MODE=testing  # or 'production'
+PORT=5001
+
+# Database Configuration
+DATABASE_URL=postgresql://user:password@localhost:5432/themed_animations
+
+# Redis Configuration
+REDIS_URL=redis://localhost:6379/0
+
+# Email Configuration (Production Mode)
+EMAIL_IMAP_SERVER=imap.gmail.com
+EMAIL_IMAP_PORT=993
+EMAIL_ADDRESS=your-email@example.com
+EMAIL_PASSWORD=your-app-password
+EMAIL_SMTP_SERVER=smtp.gmail.com
+EMAIL_SMTP_PORT=587
+
+# Storage Configuration
+STORAGE_TYPE=local  # or 's3'
+STORAGE_PATH=./uploads
+# S3_BUCKET=your-bucket-name
+# S3_REGION=us-east-1
+
+# Processing Configuration
+MAX_IMAGE_SIZE_MB=10
+MAX_ENTITIES_PER_WORLD=50
+MIN_ENTITY_SPACING_PX=50
+ANIMATION_TIMEOUT_SECONDS=300
+
+# Celery Configuration
+CELERY_BROKER_URL=redis://localhost:6379/1
+CELERY_RESULT_BACKEND=redis://localhost:6379/2
 ```
 
-## 📚 Original Documentation
+### Theme Configuration
 
-For detailed information about the underlying AnimatedDrawings technology, configuration files, BVH motion files, and advanced features, please refer to:
+Themes are defined in the database and can be customized. Each theme includes:
+
+- Display name and identifier
+- Background image URL
+- World dimensions (width x height)
+- Positioning rules (ground-based, floating, clustered, etc.)
+- Motion sequence mappings
+- Maximum entity capacity
+
+## Technical Details
+
+### Animation Pipeline
+
+1. **Character Detection** - AI detects human figure in drawing using Facebook Animated Drawings
+2. **Segmentation** - Generates mask separating character from background
+3. **Joint Annotation** - Identifies joint locations (head, torso, arms, legs)
+4. **Skeleton Rigging** - Creates skeletal structure for animation
+5. **Motion Retargeting** - Applies BVH motion data with theme-aware selection
+6. **Export** - Generates animation data for rendering
+
+### Spatial Positioning Algorithm
+
+The World Compositor uses an intelligent grid-based algorithm:
+
+1. Analyze entity visual characteristics (size, orientation)
+2. Apply theme-specific positioning rules
+3. Find available space with minimum 50px spacing
+4. Calculate position score based on distribution balance
+5. Assign optimal coordinates with collision avoidance
+
+### Database Schema
+
+Core tables:
+- `users` - Email-based user identification
+- `themes` - Theme definitions and properties
+- `themed_worlds` - World instances for each theme
+- `drawings` - User-submitted drawings and processing status
+- `animation_data` - Generated animation artifacts
+- `drawing_entities` - Placed drawings in worlds with coordinates
+- `processing_jobs` - Background job queue and status
+- `notifications` - Email notification tracking
+
+See `database/migrations/001_initial_schema.sql` for complete schema.
+
+## Original Documentation
+
+For detailed information about the underlying AnimatedDrawings technology:
 
 - **[README_ORIGINAL.md](README_ORIGINAL.md)** - Complete original documentation
 - **[examples/config/README.md](examples/config/README.md)** - Configuration file documentation
+- **[.kiro/specs/themed-animation-platform/](/.kiro/specs/themed-animation-platform/)** - Project specifications
 
-## 🎨 How It Works
+## Development Status
 
-1. **Upload/Select Drawing:** Choose a drawing in Testing or Production mode
-2. **Character Detection:** AI detects the human figure in the drawing
-3. **Pose Estimation:** Identifies joint locations (head, arms, legs, etc.)
-4. **Rigging:** Creates a skeleton structure for animation
-5. **Motion Retargeting:** Applies BVH motion data to the character
-6. **Animation Output:** Generates animated GIF or MP4
+This is an active development project following the implementation plan in `.kiro/specs/themed-animation-platform/tasks.md`.
 
-## 🛠️ Development
+### Completed
 
-### Project Status
+- Database schema and migrations
+- Core domain models (Drawing, Theme, DrawingEntity, ProcessingJob)
+- ORM layer with SQLAlchemy
+- Repository pattern for data access
+- Basic web UI with mode switching
+- Testing mode infrastructure
 
-This is an active development project. Current features:
-- ✅ Web UI with Testing/Production modes
-- ✅ File upload system
-- ✅ Mode switching interface
-- 🚧 Animation pipeline integration (in progress)
-- 🚧 Real-time preview
-- 🚧 Multiple character support
+### In Progress
 
-### Contributing
+- Theme management system
+- Image processing service
+- Animation engine integration
+- World compositor service
+- Email receiver service
+- Background job processing with Celery
+- Rendering service
+- Notification service
 
-Contributions are welcome! Please ensure you:
-1. Acknowledge the original Facebook Research project
-2. Follow the existing code style
-3. Test in both Testing and Production modes
-4. Update documentation as needed
+### Planned
 
-## 📄 License
+- REST API endpoints
+- Frontend enhancements for world viewing
+- Performance optimization
+- Comprehensive testing suite
+- Docker deployment configuration
+- Production deployment
+
+## Contributing
+
+Contributions are welcome! Please:
+
+1. Review the project specifications in `.kiro/specs/themed-animation-platform/`
+2. Follow the implementation plan in `tasks.md`
+3. Acknowledge the original Facebook Research project
+4. Write tests for new features
+5. Update documentation as needed
+6. Test in both Testing and Production modes
+
+## API Documentation
+
+### REST Endpoints
+
+```
+GET  /api/v1/worlds/{world_id}           - View themed world with all entities
+GET  /api/v1/worlds?theme={theme}        - List worlds by theme (paginated)
+GET  /api/v1/drawings/{drawing_id}       - Get drawing details and status
+GET  /api/v1/users/{email}/drawings      - List user's drawings
+GET  /api/v1/health                      - System health check
+```
+
+See design document for complete API specification.
+
+## Deployment
+
+### Docker Deployment
+
+```bash
+# Build and start all services
+docker-compose up -d
+
+# View logs
+docker-compose logs -f
+
+# Stop services
+docker-compose down
+```
+
+### Manual Deployment
+
+1. Set up PostgreSQL and Redis
+2. Configure environment variables
+3. Run database migrations
+4. Start Celery workers
+5. Start Flask application
+6. Configure reverse proxy (nginx)
+
+See `DEPLOYMENT_READY.md` for detailed deployment instructions.
+
+## License
 
 This project maintains the MIT License from the original AnimatedDrawings project.
 
 **Original License:** [LICENSE](LICENSE) - Facebook Research AnimatedDrawings
 
-## 🔗 Links
+## Links
 
 - **Original Project:** https://github.com/facebookresearch/AnimatedDrawings
 - **Research Paper:** https://dl.acm.org/doi/10.1145/3592788
 - **Demo Website:** https://sketch.metademolab.com/
 
-## 📞 Support
+## Support
 
 For issues related to:
-- **Web UI:** Open an issue in this repository
-- **Core Animation:** Refer to the [original project](https://github.com/facebookresearch/AnimatedDrawings)
+- **Themed Animation Platform:** Open an issue in this repository
+- **Core Animation Library:** Refer to the [original project](https://github.com/facebookresearch/AnimatedDrawings)
 
-## 🎓 Citation
+## Citation
 
 If you use this project in your research, please cite the original paper:
 
@@ -240,4 +412,4 @@ numpages = {15}
 
 ---
 
-**Built with ❤️ on top of Facebook Research's AnimatedDrawings**
+Built on top of Facebook Research's AnimatedDrawings
