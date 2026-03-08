@@ -1,18 +1,23 @@
-# 🎨 Animated Drawings - Web UI Platform
+# Themed Animation Platform
 
-A modern web-based platform for animating drawings, built on top of [Facebook Research's AnimatedDrawings](https://github.com/facebookresearch/AnimatedDrawings) project.
+A multi-user platform that transforms static drawings into animated characters within shared, themed virtual worlds. Built on top of [Facebook Research's AnimatedDrawings](https://github.com/facebookresearch/AnimatedDrawings) library.
 
-## 📋 Overview
+## Overview
 
-This project extends the original AnimatedDrawings research by providing:
-- **Web-based UI** for easy interaction
-- **Testing & Production modes** for development and deployment
-- **Simple file upload** interface
-- **Multiple animation presets** (dab, jumping, wave, zombie, etc.)
+The Themed Animation Platform accepts drawing images, automatically animates them using AI-powered character detection, and places them into collaborative themed environments where multiple users' creations coexist and interact spatially.
 
-## 🙏 Acknowledgments
+### Key Features
 
-**IMPORTANT:** This project is built on top of the excellent work by Facebook Research:
+- **Email-based submission workflow** - Send drawings via email with theme specifications
+- **AI-powered animation** - Automatic character detection and animation using Facebook's Animated Drawings
+- **Themed virtual worlds** - Shared environments (jungle, christmas, party, school, ocean) where drawings come together
+- **Intelligent spatial positioning** - Smart placement with collision avoidance and theme-aware rules
+- **Multi-user collaboration** - Multiple users' drawings coexist in the same themed world
+- **Dual operation modes** - Testing mode for development, production mode for email-based workflow
+
+## Acknowledgments
+
+This project is built on top of the excellent work by Facebook Research:
 
 - **Original Project:** [AnimatedDrawings](https://github.com/facebookresearch/AnimatedDrawings)
 - **Research Paper:** [A Method for Animating Children's Drawings of the Human Figure](https://dl.acm.org/doi/10.1145/3592788)
@@ -21,64 +26,92 @@ This project extends the original AnimatedDrawings research by providing:
 
 We are grateful to the Facebook Research team for making this technology available to the community.
 
-## 🚀 Quick Start
+## Quick Start
 
 ### Prerequisites
 
 - Python 3.8.13 or higher (tested with Python 3.12.4)
+- PostgreSQL 12+ (for production)
+- Redis (for caching and job queue)
 - Virtual environment (recommended)
 
 ### Installation
 
-1. **Clone the repository:**
+1. Clone the repository:
 ```bash
 git clone <your-repo-url>
 cd AnimatedDrawings
 ```
 
-2. **Create and activate virtual environment:**
+2. Create and activate virtual environment:
 ```bash
 python3 -m venv venv
 source venv/bin/activate  # On Windows: venv\Scripts\activate
 ```
 
-3. **Install dependencies:**
+3. Install dependencies:
 ```bash
 pip install -e .
+pip install -r requirements.txt
 ```
 
-4. **Run the web application:**
+4. Set up the database:
 ```bash
-# Testing mode (default)
-python app.py
+# Create PostgreSQL database
+createdb themed_animations
 
-# Production mode
-APP_MODE=production python app.py
+# Run migrations
+python database/migrate.py
 ```
 
-5. **Open your browser:**
+5. Configure environment variables:
+```bash
+cp .env.example .env
+# Edit .env with your configuration
+```
+
+6. Run the application:
+```bash
+# Testing mode (direct upload, no email required)
+./run_testing.sh
+
+# Production mode (email-based workflow)
+./run_production.sh
+```
+
+7. Open your browser:
 ```
 http://localhost:5001
 ```
 
-## 🎯 Features
+## How It Works
 
-### Testing Mode
-- Use pre-loaded sample images from `test_images/` folder
-- Quick testing without uploading files
-- Perfect for development and demos
+### User Workflow
 
-### Production Mode
-- Upload your own drawings (PNG, JPG up to 16MB)
-- Process custom images
-- Ready for real-world use
+1. **Submit Drawing** - Send an email with your drawing attachment and theme keyword (e.g., "jungle", "christmas")
+2. **Automatic Processing** - System detects character, generates segmentation, and applies theme-appropriate animation
+3. **World Placement** - Drawing is intelligently placed in a shared themed world with other users' creations
+4. **Notification** - Receive email with link to view your animated drawing in the themed world
 
-### Animation Options
-- **Dab** - Fun dabbing motion
-- **Jumping** - Energetic jumping animation
-- **Wave Hello** - Friendly waving gesture
-- **Zombie** - Spooky zombie walk
-- **Jumping Jacks** - Exercise animation
+### System Architecture
+
+The platform consists of six core services:
+
+- **Email Receiver Service** - Monitors inbox, extracts attachments, parses themes
+- **Image Processing Service** - Validates, normalizes, and stores images
+- **Animation Engine Service** - Integrates Facebook Animated Drawings for character detection and animation
+- **World Compositor Service** - Manages themed worlds and spatial positioning with collision avoidance
+- **Rendering Service** - Composes scenes, synchronizes animations, generates video output
+- **Notification Service** - Sends confirmation emails with world viewing URLs
+
+### Supported Themes
+
+- **Jungle** - Adventure theme with ground-based positioning and nature animations
+- **Christmas** - Festive theme with clustered positioning and celebratory motions
+- **Party** - Celebration theme with random distribution and energetic animations
+- **School** - Educational theme with structured row-based positioning
+- **Ocean** - Underwater theme with depth-based layers and swimming motions
+- **General** - Default theme with balanced grid distribution
 
 ## 📁 Project Structure
 

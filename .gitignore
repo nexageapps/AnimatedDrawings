@@ -55,3 +55,4 @@ video.*
 # Environment variables
 .env
 archive/
+.kiro/
