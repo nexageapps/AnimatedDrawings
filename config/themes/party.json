@@ -1,0 +1,22 @@
+{
+  "name": "party",
+  "display_name": "Party Time",
+  "background_image_url": "/static/backgrounds/party.jpg",
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "max_entities": 50,
+  "positioning_rules": {
+    "type": "random_distribution",
+    "min_spacing": 50,
+    "allow_elevated": true,
+    "elevation_zones": [
+      {"y_range": [200, 400], "probability": 0.2},
+      {"y_range": [400, 700], "probability": 0.5},
+      {"y_range": [700, 1000], "probability": 0.3}
+    ]
+  },
+  "motion_sequences": ["jesse_dance", "jumping", "dab", "jumping_jacks"],
+  "description": "A vibrant party scene with random distribution and elevated positions for balloons and decorations"
+}

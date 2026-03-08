@@ -1,0 +1,21 @@
+{
+  "name": "school",
+  "display_name": "School Days",
+  "background_image_url": "/static/backgrounds/school.jpg",
+  "dimensions": {
+    "width": 1920,
+    "height": 1080
+  },
+  "max_entities": 50,
+  "positioning_rules": {
+    "type": "row_based",
+    "rows": 4,
+    "columns": 13,
+    "row_spacing": 200,
+    "column_spacing": 140,
+    "start_position": [100, 300],
+    "min_spacing": 50
+  },
+  "motion_sequences": ["wave_hello", "jumping", "dab"],
+  "description": "A classroom or playground scene with structured row-based positioning like desks or students in formation"
+}
